@@ -1,15 +1,24 @@
 const fs = require("fs");
 const path = require("path");
 const chokidar = require("chokidar");
+const { pathToRegexp } = require("path-to-regexp");
 
 const mocker = {};
 const cacheUrlInFile = {};
 
+// “？：”非获取匹配，匹配冒号后的内容但不获取匹配结果，不进行存储供以后使用。
+// pathToRegexp('/api/users/:id') => /^\/api\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i
+const getMockerKey = (url) => {
+  return Object.keys(mocker).find((key) => {
+    return pathToRegexp(key).exec(url);
+  });
+};
+
 module.exports.apiMock = (app, dir) => {
   app.all("/*", (req, res, next) => {
-    const key = req.originalUrl;
-    if (mocker[key]) {
-      return res.send(mocker[key]);
+    const mockerKey = getMockerKey(req.originalUrl);
+    if (mockerKey && mocker[mockerKey]) {
+      return res.send(mocker[mockerKey]);
     }
     next();
   });
