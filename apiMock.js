@@ -32,12 +32,16 @@ module.exports.apiMock = (app, dir) => {
     } else if (["add", "change"].includes(event)) {
       if (fs.statSync(curPath).isFile()) {
         console.log(`${event === "add" ? "新增" : "修改"}mock文件：`, curPath);
-        delete require.cache[path.resolve(curPath)];
-        const module = require(curPath);
-        Object.assign(mocker, module);
-        Object.assign(cacheUrlInFile, {
-          [curPath]: Object.keys(module),
-        });
+        try {
+          delete require.cache[path.resolve(curPath)];
+          const module = require(curPath);
+          Object.assign(mocker, module);
+          Object.assign(cacheUrlInFile, {
+            [curPath]: Object.keys(module),
+          });
+        } catch (err) {
+          console.warn(`读取mock文件${curPath}失败，请按照规则刷新文件内容`);
+        }
       }
     }
   });
