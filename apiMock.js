@@ -8,15 +8,18 @@ const cacheUrlInFile = {};
 
 // “？：”非获取匹配，匹配冒号后的内容但不获取匹配结果，不进行存储供以后使用。
 // pathToRegexp('/api/users/:id') => /^\/api\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i
-const getMockerKey = (url) => {
+const getMockerKey = (url, method) => {
   return Object.keys(mocker).find((key) => {
-    return pathToRegexp(key).exec(url);
+    return pathToRegexp(key.replace(new RegExp(`^${method} `, "i"), "")).exec(
+      url
+    );
   });
 };
 
 module.exports.apiMock = (app, dir) => {
   app.all("/*", (req, res, next) => {
-    const mockerKey = getMockerKey(req.originalUrl);
+    const { originalUrl, method } = req;
+    const mockerKey = getMockerKey(originalUrl, method);
     if (mockerKey && mocker[mockerKey]) {
       return res.send(mocker[mockerKey]);
     }
