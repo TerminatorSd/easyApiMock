@@ -18,8 +18,8 @@ const getMockerKey = (url, method) => {
 
 module.exports.apiMock = (app, dir) => {
   app.all("/*", (req, res, next) => {
-    const { originalUrl, method } = req;
-    const mockerKey = getMockerKey(originalUrl, method);
+    const { path, method } = req;
+    const mockerKey = getMockerKey(path, method);
     if (mockerKey && mocker[mockerKey]) {
       return res.send(mocker[mockerKey]);
     }
