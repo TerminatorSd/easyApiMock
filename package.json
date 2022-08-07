@@ -1,0 +1,23 @@
+{
+  "name": "easyapimock",
+  "version": "1.0.0",
+  "description": "An easy api mock tool",
+  "main": "apiMock.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TerminatorSd/easyApiMock.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TerminatorSd/easyApiMock/issues"
+  },
+  "homepage": "https://github.com/TerminatorSd/easyApiMock#readme",
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "express": "^4.18.1"
+  }
+}
